@@ -1,0 +1,102 @@
+<!doctype html>
+<html> 
+<head> 
+	<title>Carousel</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="carousel.css">
+	<script src="jquery-2.1.1.js"></script>
+	<script src="slider.js"></script>
+</head> 
+<body>
+	<div class="container">
+		<div class="smallButtons">
+			<div class="oneButton" data-dir="0" id="button-0"></div>
+			<div class="oneButton" data-dir="1" id="button-1"></div>
+			<div class="oneButton" data-dir="2" id="button-2"></div>
+			<div class="oneButton" data-dir="3" id="button-3"></div>
+			<div class="oneButton" data-dir="4" id="button-4"></div>
+			<div class="oneButton" data-dir="5" id="button-5"></div>
+			<div class="oneButton" data-dir="6" id="button-6"></div>
+			<input type="hidden" id="valueButtons" name="valueButtons" />
+		</div>
+		<div class="bigButtons">
+			<div class="button" data-dir="prev" id="prevButton"></div>
+			<div class="button" data-dir="next" id="nextButton"></div>
+		</div>
+		<ul>
+			<li><img src="images/1.jpg" alt="image" class="0"></li>
+			<li><img src="images/2.jpg" alt="image" class="1"></li>
+			<li><img src="images/3.jpg" alt="image" class="2"></li>
+			<li><img src="images/4.jpg" alt="image" class="3"></li>
+			<li><img src="images/5.jpg" alt="image" class="4"></li>
+			<li><img src="images/6.jpg" alt="image" class="5"></li>
+			<li><img src="images/7.jpg" alt="image" class="6"></li>
+		</ul>
+	</div>
+	
+</body>
+</html>
+<script>
+var container = $('div.container').css('overflow', 'hidden').children('ul'),
+			slider = new Slider( container, $('.bigButtons') );
+
+var reviewObject = {
+
+	init : function() {
+		$('#prevButton').hide();
+		$('#button-0').addClass('buttonHovered');
+
+		this.initEvents();
+		//this.initialSlider();
+	},
+
+	initialSlider : function() {
+		for (var i = 0; i < 7; i++) {
+			container.animate({'margin-left' :  -( i * 1300 )}, 2000);
+		}
+		
+	},
+
+	initEvents : function() {
+
+		$('.button').on('click', function() {	
+			$('.oneButton').removeClass('current');
+			slider.setCurrent( $(this).data('dir') );
+			slider.transition();
+		});
+
+		$('.oneButton').on('click', function() {
+			$(this).addClass('buttonHovered').siblings().removeClass('buttonHovered');
+			$(this).addClass('current').siblings().removeClass('current');
+
+			if ( $('#button-0').hasClass('buttonHovered') ) {
+				$('#prevButton').hide();
+				$('#nextButton').show();
+			} else {
+				$('#prevButton').show();
+			} 
+
+			if ( $('#button-6').hasClass('buttonHovered') ) {
+				$('#nextButton').hide();
+				$('#prevButton').show();
+			} else {
+				$('#nextButton').show();
+			}
+
+			slider.setCurrent( $(this).data('dir') );
+			valueClicked = $(this).attr('id').split('-');
+			$('#valueButtons').val(valueClicked[1]);
+			value = $('#valueButtons').val();
+
+			container.animate({'margin-left' : -( value * 1300)});	
+			console.log(value);
+		});
+
+	}
+};
+
+$( document ).ready(function() {
+	reviewObject.init();
+});
+
+</script>
